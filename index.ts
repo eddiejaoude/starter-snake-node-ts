@@ -29,12 +29,13 @@ function handleIndex(request: Request, response: Response<SnakeInfo>) {
 function handleStart(request: GameRequest, response: Response) {
     const gameData = request.body
 
-    console.log('START')
+    console.log('STARTING NOW')
     response.status(200).send('ok')
 }
 
 function handleMove(request: GameRequest, response: Response<Move>) {
     const gameData = request.body
+    console.dir(gameData, { depth: null });
 
     const possibleMoves: Direction[] = ['up', 'down', 'left', 'right']
     const move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)]
