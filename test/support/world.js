@@ -130,17 +130,6 @@ class World {
         });
     }
 
-    performDelete(endpoint, storage) {
-        return new Promise((resolve, reject) => {
-            const uri = this.parseTemplateString(endpoint);
-            const request = this.agent.delete(uri);
-
-            this.headers.forEach((header) => request.set(header.name, header.value));
-            request.expect((res) => this.processResponse(res, storage));
-            request.end((err, res) => err ? reject(err) : resolve(res));
-        });
-    }
-
     buildPost(type, field, endpoint, data, storage) {
         const namespace = `${storage}-${endpoint}`;
         return new Promise((resolve, reject) => {
@@ -165,7 +154,7 @@ class World {
         return new Promise((resolve, reject) => {
             const uri = this.parseTemplateString(endpoint);
             const request = this.agent.post(uri);
-console.log('reading', endpoint, this.body[namespace]);
+
             this.headers.forEach((header) => request.set(header.name, header.value));
             request.send(this.body[namespace]);
             request.expect((res) => this.processResponse(res, storage));
@@ -184,19 +173,6 @@ console.log('reading', endpoint, this.body[namespace]);
             request.end((err, res) => err ? reject(err) : resolve(res));
         });
     }
-
-    performPatch(endpoint, data, storage) {
-        return new Promise((resolve, reject) => {
-            const uri = this.parseTemplateString(endpoint);
-            const request = this.agent.patch(uri);
-
-            this.headers.forEach((header) => request.set(header.name, header.value));
-            request.send(data);
-            request.expect((res) => this.processResponse(res, storage));
-            request.end((err, res) => err ? reject(err) : resolve(res));
-        });
-    }
-
 }
 
 setWorldConstructor(World);
