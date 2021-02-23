@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const { Then } = require('cucumber');
+import { expect } from 'chai';
+import { Then } from '@cucumber/cucumber';
 
 const checkValues = require('../support/compare');
 

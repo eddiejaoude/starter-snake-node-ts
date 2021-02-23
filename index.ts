@@ -141,4 +141,4 @@ function nextMove(
     return { x, y };
 }
 
-module.exports = app;
+export default app;

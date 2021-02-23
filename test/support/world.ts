@@ -1,17 +1,20 @@
-const supertest = require('supertest');
-const { setWorldConstructor } = require('cucumber');
-const _ = require('lodash');
+import * as supertest from 'supertest';
+import { setWorldConstructor } from '@cucumber/cucumber';
+import _ from 'lodash';
+import app from '../../index';
 
 let history = {};
 
 class World {
+    private agent;
+    private mocks = [];
+    private headers = new Set();
+    private history = {};
+    private body = {};
 
     constructor() {
-        this.agent = supertest.agent(require('../../build/index'));
-        this.mocks = [];
-        this.headers = new Set();
+        this.agent = supertest.agent(app);
         this.history = history;
-        this.body = {};
     }
 
     setMock(mock) {
@@ -91,7 +94,7 @@ class World {
         return cleaned;
     }
 
-    getHistory(name, row) {
+    getHistory(name, row?) {
         if (row !== undefined) {
             return this.history[name][row];
         }
@@ -106,6 +109,7 @@ class World {
         let data = {
             status: res.statusCode,
             headers: res.headers,
+            response: '',
         };
 
         try {
@@ -124,7 +128,7 @@ class World {
             const uri = this.parseTemplateString(endpoint);
             const request = this.agent.get(uri);
 
-            this.headers.forEach((header) => request.set(header.name, header.value));
+            this.headers.forEach((header: { name: string, value: string }) => request.set(header.name, header.value));
             request.expect((res) => this.processResponse(res, storage));
             request.end((err, res) => err ? reject(err) : resolve(res));
         });
@@ -145,7 +149,7 @@ class World {
                     _.set(this.body[namespace], field, data);
             }
 
-            resolve();
+            resolve(true);
         });
     }
 
@@ -155,7 +159,7 @@ class World {
             const uri = this.parseTemplateString(endpoint);
             const request = this.agent.post(uri);
 
-            this.headers.forEach((header) => request.set(header.name, header.value));
+            this.headers.forEach((header: { name: string, value: string }) => request.set(header.name, header.value));
             request.send(this.body[namespace]);
             request.expect((res) => this.processResponse(res, storage));
             request.end((err, res) => err ? reject(err) : resolve(res));
@@ -167,7 +171,7 @@ class World {
             const uri = this.parseTemplateString(endpoint);
             const request = this.agent.post(uri);
 
-            this.headers.forEach((header) => request.set(header.name, header.value));
+            this.headers.forEach((header: { name: string, value: string }) => request.set(header.name, header.value));
             request.send(data);
             request.expect((res) => this.processResponse(res, storage));
             request.end((err, res) => err ? reject(err) : resolve(res));

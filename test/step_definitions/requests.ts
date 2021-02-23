@@ -1,4 +1,4 @@
-const { When } = require('cucumber');
+import { When } from '@cucumber/cucumber';
 
 When(/^I make a (GET) request to the API endpoint "([^"]*)" as "([^"]*)"(?: with "([^"]*)" content type)?$/, async function (requestMethod, requestEndpoint, historyName, contentType) {
     this.setHeader('content-type', contentType ? contentType : 'application/json');

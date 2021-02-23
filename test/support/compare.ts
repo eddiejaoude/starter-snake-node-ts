@@ -1,4 +1,4 @@
-const { expect } = require('chai');
+import { expect } from 'chai';
 
 const checkValues = (expected, actual, message = '', exact = true) => {
     const expectedKeys = Object.keys(expected);
